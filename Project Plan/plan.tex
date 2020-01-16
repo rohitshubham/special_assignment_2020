@@ -1,5 +1,6 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
+\usepackage{hyperref}
 \usepackage[margin=0.75in]{geometry}
 
 \begin{document}
@@ -7,50 +8,59 @@
     
     	% MAKE SURE YOU TAKE OUT THE SQUARE BRACKETS
     
-		\LARGE{\textbf{Capstone Proposal}} \\
+		\LARGE{\textbf{CS-E4003 Special Assignment}} \\
+		\Large{Project Plan} \\
         \vspace{1em}
-        \Large{Complete or Obsolete: A re-evaluation of research} \\
+        \Large{An Implementation of Dynamic adaptive DNN surgery for
+        	inference acceleration on the edge} \\
         \vspace{1em}
-        \normalsize\textbf{Joseph Eppich} \\
-        \normalsize{Eppichj@sunypoly.edu} \\
+        \normalsize\textbf{Rohit Raj} \\
+        \normalsize{Student Number - \textbf{801636}} \\
+        \normalsize{\href{mailto:rohit.raj@aalto.fi}{rohit.raj@aalto.fi}} \\
         \vspace{1em}
-        \normalsize{Advisor: Joshua White} \\
-        \vspace{1em}
-        \normalsize{State University of New York Polytechnic Institute, Utica NY} \\
-        \normalsize{Bachelors of Science in Network and Computer Security}
+        \normalsize\textbf{Supervisor: Prof. Mario Di Francesco} \\
+        \normalsize{\href{mailto:mario.di.francesco@aalto.fi}{mario.di.francesco@aalto.fi} } \\
+        \normalsize{Department of Computer Science, Aalto University School of Science}
+
      
 	\end{center}
     \begin{normalsize}
     
-    	\section{Objective:}
-        
-        The objective of this capstone is to read the paper "Quantitative Analysis of Intrusion Detection Systems:Snort and Suricata" and attempt at least one test present in the paper to see if the research is still valid today.    \\
-      
-		\section{Rationale:}
-        
-       This project is important to me because I believe it is important to always re-evaluate research. With how quickly technology changes research that may have been valid  in 2011 may not longer be valid with today's technology.  The paper i have chosen is about the intrusion detection systems of Suricata and Snort, i hope to get a better understanding of how they work though this capstone and use that knowledge in the near future.
+    	\section{Introduction:}
+         The special assignment requires an implementation of the paper titled ``Dynamic Adaptive DNN Surgery for Inference Acceleration on the Edge" [1]. This paper by C. Hu \textit{et al.} describes a partition scheme to efficiently maximize the performance of Deep Neural Network (DNN) inference on the edge and cloud machines. The partition scheme adapts itself under light and heavy network conditions and distributes the DNN layers accordingly. More specifically, my aim in this special assignment would be to implement the Edge-Cloud DNN Inference Model - Light (ECDI-L) proposed by the authors.       
+
         
 	   	\section{Approach:}
         
-      I plan on approaching this capstone through several steps.  First I will conduct research on the paper I have chosen, I will do this by reading the paper and taking notes. Second I plan on taking at least one of the tests used in the paper and preforming it myself recording my results.  Lastly I will compare my results with the intials results and record my findings.
+      	The approach to the special assignment and the implementation would first start with a thorough reading of the paper. The first step towards implementation would be selection of a suitable model and a Deep-Learning Framework. After this, I will start the implementation of ECDI-L scheme for DNN layers partitioning in Python 3.6. 
+      	
+      	\section{Expected Outcome:}
+      	
+      	The outcome of this special assignment will be  commented source code of ECDI-L scheme. 
+      	
+      	\section{Credits and Grading:}
+      	
+      	The special assignment will be worth 5 ECTS and will be graded as either \textbf{PASS}  or \textbf{FAIL}.      	
+      	
         
     	\section{Timeline:}
         
-        Give a bulleted timeline of when you will have things completed. Don't forget to include the Student Undergraduate Research Expo poster presentations, and final presentation in your timeline. 
-        \\
+        The expected timeline is as follows:  \\
         
-        \noindent You can create bullets by doing:
+
         
         \begin{itemize}
         
-\item(2/25)have a basic idea and outline for my paper
-\item (3/1) have my capstone proposal made and submitted, and begin researching
-\item(4/19) have my paper finished submitted for final review
-\item(5/1) proof read and look over all my material and prepare for my presentation
+\item(24/01/2019)Complete the reading of the research paper.
+\item (31/01/2019) Finalize the choice of DNN Model and Framework
+\item(22/05/2019) Complete the implementation of ECDI-L in python 
+\item(31/05/2019) Submission of source code and required documentation to the supervisor.
         \end{itemize}
         
-    	\section{Possible Issues:}
-        Possible problems I foresee with this capstone is my lack of hardware compared to that used in the original content. beyond that technical issues with suricata and snort could lead to issues in the long run.
+        Additionally, I will report the progress of the implementation to the supervisor weekly/biweekly personally or through email.
+         
+    	\section{References:}
+        [1] C. Hu, W. Bao, D. Wang, and F. Liu, "Dynamic adaptive DNN surgery for inference acceleration on the edge," in IEEE INFOCOM 2019 - IEEE Conference on Computer Communications, April 2019, pp. 1423–1431.
 \end{normalsize}
-  
+
 \end{document}
