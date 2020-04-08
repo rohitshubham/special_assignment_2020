@@ -3,6 +3,7 @@ import torch
 from PIL import Image
 import collections
 from vgg import VGGNet
+import json
 
 device = torch.device('cpu')
 
@@ -20,27 +21,75 @@ for layer_name, weights in loaded_model_weights.items():
 
 test_model.load_state_dict(modified_weights)
 
-transform = transforms.Compose([
-    transforms.Resize(256),	transforms.CenterCrop(224),	transforms.ToTensor(),
-    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-    ])
-
-img = Image.open("/home/rohit/Documents/Special Assignment/src/dog.jpg")
-
-img_t = transform(img)
-batch_t = torch.unsqueeze(img_t, 0)
-
 test_model.eval()
 
-out = test_model(batch_t, start_layer=0, stop_layer=15)
+skip_hyperparameters_generation = False
 
-out = test_model(out, start_layer=16, stop_layer=22)
 
-with open(r'/home/rohit/Documents/Special Assignment/src/imagenet_classes.txt') as f:
-    labels = [line.strip() for line in f.readlines()]
+def load_classes(path):
+    """
+    Loads class labels at 'path'
+    """
+    fp = open(path, "r")
+    names = fp.read().split("\n")[:-1]
+    return names
 
-# explain this one
-_, index = torch.max(out, 1)
+
+def get_model_layers():
+    with open('metadata/vgg_layer_info.json') as f:
+        data = json.load(f)
+    return data
+
+
+def set_layer_metadata(layer_metadata):
+    with open('metadata/layer_metadata.json', 'w') as json_file:
+        json.dump(layer_metadata, json_file)
+
+
+def detect_images(img):
+    transform = transforms.Compose([transforms.Resize(256),	
+                                    transforms.CenterCrop(224),
+                                    transforms.ToTensor(),
+                                    transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                                         std=[0.229, 0.224, 0.225])
+                                    ])
+
+    img_t = transform(img)
+    batch_t = torch.unsqueeze(img_t, 0)
+
+    def generate_size_json(out):
+        data = get_model_layers()
+        layer_metadata = {}
+
+        # input image size
+        print(f'{data[str(0)]} : {(out.element_size() * out.nelement())/1024/1024} MB')
+        layer_metadata[0] = {"layer_name": data[str(0)], "size": (out.element_size() * out.nelement())/1024/1024}
+        
+        for i in range(23):
+            out = test_model(batch_t, start_layer=0, stop_layer=i)
+            print(f'{data[str(i+1)]} : {(out.element_size() * out.nelement())/1024/1024} MB')
+            layer_metadata[i+1] = {"layer_name": data[str(i+1)], "size": (out.element_size() * out.nelement())/1024/1024}
+
+        set_layer_metadata(layer_metadata)
+        return out
+
+    with torch.no_grad():
+        if not skip_hyperparameters_generation:
+            out = generate_size_json(batch_t)
+        else:
+            out = test_model(batch_t, start_layer=0, stop_layer=13)
+            out = test_model(out, start_layer=14, stop_layer=22)
+
+    return out
+
+
+out = detect_images(Image.open("images/dog.jpg"))
+
+labels = load_classes("classes/imagenet_classes.txt")
+
+
+_, index = torch.sort(out, descending=True)
 percentage = torch.nn.functional.softmax(out, dim=1)[0] * 100
 
-print(f"Image: {labels[index[0]]}, Confidence: {percentage[index[0]].item()}")
+for idx in range(5):
+    print(f"Image: {labels[index[0][idx]]}, Confidence: {percentage[index[0][idx]].item()}")
