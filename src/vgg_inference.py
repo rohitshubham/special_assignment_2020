@@ -5,10 +5,13 @@ import collections
 from vgg import VGGNet
 import json
 
-device = torch.device('cpu')
+dev = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-model_path = r"/home/rohit/vgg16-397923af.pth"
+device = torch.device(dev)
+
+model_path = r"/home/rohit/Documents/vgg16-397923af.pth"
 test_model = VGGNet(1000)
+test_model.cuda()
 
 loaded_model_weights = torch.load(model_path)
 
@@ -23,7 +26,7 @@ test_model.load_state_dict(modified_weights)
 
 test_model.eval()
 
-skip_hyperparameters_generation = False
+skip_hyperparameters_generation = True
 
 
 def load_classes(path):
@@ -55,7 +58,7 @@ def detect_images(img):
                                     ])
 
     img_t = transform(img)
-    batch_t = torch.unsqueeze(img_t, 0)
+    batch_t = torch.unsqueeze(img_t, 0).cuda()
 
     def generate_size_json(out):
         data = get_model_layers()
