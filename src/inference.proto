@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+
+message Tensor {
+    string tensor = 1;
+}
+
+message Result {
+    string result = 1;
+}
+
+service Server {
+    rpc Partial(Tensor) returns (Result) {};
+}

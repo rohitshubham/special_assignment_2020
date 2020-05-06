@@ -1,10 +1,12 @@
 import torch
 import collections
 from vgg import VGGNet
+import json
 
 device = torch.device('cpu')
 
 model_path = r"/home/rohit/vgg16-397923af.pth"
+
 test_model = VGGNet(1000)
 
 loaded_model_weights = torch.load(model_path)
@@ -30,12 +32,13 @@ test_model.load_state_dict(modified_weights)
 
 test_model.eval()
 
-out = test_model(out, start_layer=14, stop_layer=22)
-labels = load_classes("classes/imagenet_classes.txt")
 
+def partial_inference(request):
+    out = torch.Tensor(json.loads(request))
+    with torch.no_grad():
+        out = test_model(out, start_layer=14, stop_layer=22)
+    labels = load_classes("classes/imagenet_classes.txt")
 
-_, index = torch.sort(out, descending=True)
-percentage = torch.nn.functional.softmax(out, dim=1)[0] * 100
-
-for idx in range(5):
-    print(f"Image: {labels[index[0][idx]]}, Confidence: {percentage[index[0][idx]].item()}")
+    _, index = torch.sort(out, descending=True)
+    percentage = torch.nn.functional.softmax(out, dim=1)[0] * 100
+    return f"Image: {labels[index[0][0]]}, Confidence: {percentage[index[0][0]].item()}"

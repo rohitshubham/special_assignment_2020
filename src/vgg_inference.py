@@ -4,14 +4,15 @@ from PIL import Image
 import collections
 from vgg import VGGNet
 import json
+from grpc_client import send_grpc_msg
 
 dev = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 device = torch.device(dev)
 
-model_path = r"/home/rohit/Documents/vgg16-397923af.pth"
+model_path = r"/home/rohit/vgg16-397923af.pth"
 test_model = VGGNet(1000)
-test_model.cuda()
+test_model.to(device)
 
 loaded_model_weights = torch.load(model_path)
 
@@ -58,7 +59,7 @@ def detect_images(img):
                                     ])
 
     img_t = transform(img)
-    batch_t = torch.unsqueeze(img_t, 0).cuda()
+    batch_t = torch.unsqueeze(img_t, 0).to(device)
 
     def generate_size_json(out):
         data = get_model_layers()
@@ -81,6 +82,9 @@ def detect_images(img):
             out = generate_size_json(batch_t)
         else:
             out = test_model(batch_t, start_layer=0, stop_layer=13)
+            print(type(out))
+            est = json.dumps(out.tolist())
+            send_grpc_msg(est)
             out = test_model(out, start_layer=14, stop_layer=22)
 
     return out
