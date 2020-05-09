@@ -6,12 +6,14 @@ from torchvision import transforms
 from grpc_client import send_grpc_msg
 from PIL import Image
 
+dev = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 device = torch.device('cpu')
 
 model_path = r"/home/rohit/vgg16-397923af.pth"
 
 test_model = VGGNet(1000)
+test_model.to(device)
 
 loaded_model_weights = torch.load(model_path)
 
