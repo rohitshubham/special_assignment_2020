@@ -4,7 +4,7 @@ from PIL import Image
 import collections
 from vgg import VGGNet
 import json
-from grpc_client import send_grpc_msg
+import time 
 
 dev = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -27,7 +27,7 @@ test_model.load_state_dict(modified_weights)
 
 test_model.eval()
 
-skip_hyperparameters_generation = True
+skip_server_time_generation = True
 
 
 def load_classes(path):
@@ -45,8 +45,8 @@ def get_model_layers():
     return data
 
 
-def set_layer_metadata(layer_metadata):
-    with open('metadata/layer_metadata.json', 'w') as json_file:
+def set_layer_metadata(layer_metadata, file_name):
+    with open(f'metadata/{file_name}.json', 'w') as json_file:
         json.dump(layer_metadata, json_file)
 
 
@@ -61,32 +61,46 @@ def detect_images(img):
     img_t = transform(img)
     batch_t = torch.unsqueeze(img_t, 0).to(device)
 
-    def generate_size_json(out):
-        data = get_model_layers()
-        layer_metadata = {}
+    data = get_model_layers()
+    layer_metadata = {}
 
+    def generate_edge_parameters(out):
         # input image size
         print(f'{data[str(0)]} : {(out.element_size() * out.nelement())/1024/1024} MB')
         layer_metadata[0] = {"layer_name": data[str(0)], "size": (out.element_size() * out.nelement())/1024/1024}
-        
-        for i in range(23):
-            out = test_model(batch_t, start_layer=0, stop_layer=i)
-            print(f'{data[str(i+1)]} : {(out.element_size() * out.nelement())/1024/1024} MB')
-            layer_metadata[i+1] = {"layer_name": data[str(i+1)], "size": (out.element_size() * out.nelement())/1024/1024}
 
-        set_layer_metadata(layer_metadata)
+        for i in range(0, 23):
+            start_time_edge = time.time()
+            out = test_model(out, start_layer=i, stop_layer=i)
+            elapsed_time = time.time() - start_time_edge
+            print(f'{data[str(i+1)]} : {(out.element_size() * out.nelement())/1024/1024} MB, time = {elapsed_time} ')
+            layer_metadata[i+1] = {"layer_name": data[str(i+1)],
+                                   "size": (out.element_size() * out.nelement())/1024/1024,
+                                   "edge_time": elapsed_time}
+
+        set_layer_metadata(layer_metadata, "layer_metadata")
+        return out
+
+    def generate_server_time(out):
+        layer_metadata[0] = {"layer_name": data[str(0)], "server_time": 0}
+        print(f'{data[str(0)]} : time = {0}')
+
+        for i in range(0, 23):
+            start_time_edge = time.time()
+            out = test_model(out, start_layer=i, stop_layer=i)
+            elapsed_time = time.time() - start_time_edge
+            print(f'{data[str(i+1)]} : time = {elapsed_time}')
+            layer_metadata[i+1] = {"layer_name": data[str(i+1)],
+                                   "edge_time": elapsed_time}
+
+        set_layer_metadata(layer_metadata, "server_time")
         return out
 
     with torch.no_grad():
-        if not skip_hyperparameters_generation:
-            out = generate_size_json(batch_t)
+        if not skip_server_time_generation:
+            out = generate_edge_parameters(batch_t)
         else:
-            out = test_model(batch_t, start_layer=0, stop_layer=13)
-            print(type(out))
-            est = json.dumps(out.tolist())
-            send_grpc_msg(est)
-            out = test_model(out, start_layer=14, stop_layer=22)
-
+            out = generate_server_time(batch_t)
     return out
 
 
@@ -98,5 +112,5 @@ labels = load_classes("classes/imagenet_classes.txt")
 _, index = torch.sort(out, descending=True)
 percentage = torch.nn.functional.softmax(out, dim=1)[0] * 100
 
-for idx in range(5):
+for idx in range(1):
     print(f"Image: {labels[index[0][idx]]}, Confidence: {percentage[index[0][idx]].item()}")
