@@ -40,6 +40,7 @@ test_model.eval()
 
 
 def partial_inference(img):
+    
     transform = transforms.Compose([transforms.Resize(256),	
                                     transforms.CenterCrop(224),
                                     transforms.ToTensor(),
@@ -50,6 +51,7 @@ def partial_inference(img):
     img_t = transform(img)
     batch_t = torch.unsqueeze(img_t, 0).to(device)
     with torch.no_grad():
+        print(f"Starting VGG-16 inference")
         out = test_model(batch_t, start_layer=0, stop_layer=13)
         print(f"Executed the code till layer {13}. Sending to cloud now.")
         intermediate_tensor_list = out.tolist()
