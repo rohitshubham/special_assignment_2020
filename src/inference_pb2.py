@@ -18,7 +18,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=b'\n\x0finference.proto\"\x18\n\x06Tensor\x12\x0e\n\x06tensor\x18\x01 \x01(\t\"\x18\n\x06Result\x12\x0e\n\x06result\x18\x01 \x01(\t2\'\n\x06Server\x12\x1d\n\x07Partial\x12\x07.Tensor\x1a\x07.Result\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\x0finference.proto\"-\n\x06Tensor\x12\x0e\n\x06tensor\x18\x01 \x01(\t\x12\x13\n\x0bstart_layer\x18\x02 \x01(\x05\"\x18\n\x06Result\x12\x0e\n\x06result\x18\x01 \x01(\t2\'\n\x06Server\x12\x1d\n\x07Partial\x12\x07.Tensor\x1a\x07.Result\"\x00\x62\x06proto3'
 )
 
 
@@ -38,6 +38,13 @@ _TENSOR = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='start_layer', full_name='Tensor.start_layer', index=1,
+      number=2, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -51,7 +58,7 @@ _TENSOR = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=19,
-  serialized_end=43,
+  serialized_end=64,
 )
 
 
@@ -81,8 +88,8 @@ _RESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=45,
-  serialized_end=69,
+  serialized_start=66,
+  serialized_end=90,
 )
 
 DESCRIPTOR.message_types_by_name['Tensor'] = _TENSOR
@@ -111,8 +118,8 @@ _SERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=71,
-  serialized_end=110,
+  serialized_start=92,
+  serialized_end=131,
   methods=[
   _descriptor.MethodDescriptor(
     name='Partial',

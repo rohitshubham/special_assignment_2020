@@ -9,7 +9,7 @@ import time
 class ServerServicer(inference_pb2_grpc.ServerServicer):
     def Partial(self, request, context):
         response = inference_pb2.Result()
-        response.result = partial_inference_server.partial_inference(request.tensor)
+        response.result = partial_inference_server.partial_inference(request.tensor, request.start_layer)
         return response
 
 

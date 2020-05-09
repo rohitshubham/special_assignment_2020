@@ -50,7 +50,7 @@ def partial_inference(img):
     with torch.no_grad():
         out = test_model(batch_t, start_layer=0, stop_layer=13)
         est = json.dumps(out.tolist())
-        out = send_grpc_msg(est)
+        out = send_grpc_msg(est, 14)
     return out
 
 

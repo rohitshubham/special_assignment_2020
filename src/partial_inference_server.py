@@ -33,10 +33,10 @@ test_model.load_state_dict(modified_weights)
 test_model.eval()
 
 
-def partial_inference(request):
-    out = torch.Tensor(json.loads(request))
+def partial_inference(intermediate_data, start_layer):
+    out = torch.Tensor(json.loads(intermediate_data))
     with torch.no_grad():
-        out = test_model(out, start_layer=14, stop_layer=22)
+        out = test_model(out, start_layer=start_layer, stop_layer=22)
     labels = load_classes("classes/imagenet_classes.txt")
 
     _, index = torch.sort(out, descending=True)

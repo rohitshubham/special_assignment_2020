@@ -3,6 +3,7 @@ syntax = "proto3";
 
 message Tensor {
     string tensor = 1;
+    int32 start_layer = 2;
 }
 
 message Result {
