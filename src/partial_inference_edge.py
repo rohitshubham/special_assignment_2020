@@ -51,8 +51,9 @@ def partial_inference(img):
     batch_t = torch.unsqueeze(img_t, 0).to(device)
     with torch.no_grad():
         out = test_model(batch_t, start_layer=0, stop_layer=13)
-        est = json.dumps(out.tolist())
-        out = send_grpc_msg(est, 14)
+        print(f"Executed the code till layer {13}. Sending to cloud now.")
+        intermediate_tensor_list = out.tolist()
+        out = send_grpc_msg(intermediate_tensor_list, 14)
     return out
 
 

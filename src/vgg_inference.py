@@ -4,7 +4,7 @@ from PIL import Image
 import collections
 from vgg import VGGNet
 import json
-import time 
+import time
 
 dev = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -27,7 +27,7 @@ test_model.load_state_dict(modified_weights)
 
 test_model.eval()
 
-skip_server_time_generation = True
+skip_server_time_generation = False
 
 
 def load_classes(path):
