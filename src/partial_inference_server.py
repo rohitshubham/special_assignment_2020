@@ -1,7 +1,8 @@
 import torch
 import collections
 from vgg import VGGNet
-import json
+import time
+
 
 dev = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -37,9 +38,11 @@ test_model.eval()
 
 
 def partial_inference(intermediate_data, start_layer):
-    out = torch.Tensor(json.loads(intermediate_data)).to(device)
+    out = torch.Tensor(intermediate_data).to(device)
     with torch.no_grad():
+        start_time = time.time()
         out = test_model(out, start_layer=start_layer, stop_layer=22)
+        print(f"Finished processing request from layer {start_layer} in {time.time() - start_time}")
     labels = load_classes("classes/imagenet_classes.txt")
 
     _, index = torch.sort(out, descending=True)

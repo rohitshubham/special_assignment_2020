@@ -4,12 +4,16 @@ import inference_pb2_grpc
 from concurrent import futures
 import partial_inference_server
 import time
+import json
 
 
 class ServerServicer(inference_pb2_grpc.ServerServicer):
     def Partial(self, request, context):
+        print("Received processing request")
         response = inference_pb2.Result()
-        response.result = partial_inference_server.partial_inference(request.tensor, request.start_layer)
+        data = json.loads(request.tensor)
+        response.result = partial_inference_server.partial_inference(data, request.start_layer)
+        print("Returning response")
         return response
 
 
