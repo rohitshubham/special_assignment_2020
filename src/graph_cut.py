@@ -12,11 +12,19 @@ def get_model_layers():
 def build_vgg_graph():
     data = get_model_layers()
     vgg = nx.DiGraph()
-    for i in range(24):
-        print(data)
-    
+    for i in range(1, 23):
+        layer_data = data[f'{i}']
+        layer_data_next = data[f'{i + 1}']
+        vgg.add_edge(layer_data['layer_name'],
+                     layer_data_next['layer_name'],
+                     capacity=layer_data['transmission_time'])
+    return vgg
 
-build_vgg_graph()
+# Do the boykov edge split
+# https://networkx.github.io/documentation/stable/reference/algorithms/generated/networkx.algorithms.flow.boykov_kolmogorov.html#networkx.algorithms.flow.boykov_kolmogorov
+
+
+vgg = build_vgg_graph()
 G = nx.Graph()
 G.add_node(1)
 G.add_edge(3, 2)
@@ -31,6 +39,6 @@ for n, nbrs in FG.adj.items():
         wt = eattr['weight']
         print('(%d, %d, %.3f)' % (n, nbr, wt))
 
-plt.subplot(121)
-nx.draw(G, with_labels=True, font_weight='bold')
+nx.draw(vgg, with_labels=True, font_weight='bold')
+plt.draw()
 plt.show()
