@@ -4,16 +4,19 @@ import json
 
 
 def get_model_layers():
-    with open('metadata/vgg_layer_info.json') as f:
+    with open('metadata/layer_metadata.json') as f:
         data = json.load(f)
     return data
 
 
-def build_vgg_graph(data):
+def build_vgg_graph():
     data = get_model_layers()
     vgg = nx.DiGraph()
-    for i in range(23):
+    for i in range(24):
+        print(data)
+    
 
+build_vgg_graph()
 G = nx.Graph()
 G.add_node(1)
 G.add_edge(3, 2)
@@ -29,5 +32,5 @@ for n, nbrs in FG.adj.items():
         print('(%d, %d, %.3f)' % (n, nbr, wt))
 
 plt.subplot(121)
-nx.draw(FG, with_labels=True, font_weight='bold')
+nx.draw(G, with_labels=True, font_weight='bold')
 plt.show()
