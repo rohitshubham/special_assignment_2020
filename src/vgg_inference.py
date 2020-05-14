@@ -16,7 +16,7 @@ test_model.to(device)
 
 loaded_model_weights = torch.load(model_path)
 
-bandwidth = 6.71  # in Mbits per/second
+bandwidth = 6.71/8  # in Mbytes per/second - Confirm bytes and bits conversion
 
 modified_weights = collections.OrderedDict()
 for layer_name, weights in loaded_model_weights.items():
@@ -75,7 +75,7 @@ def detect_images(img):
             start_time_edge = time.time()
             out = test_model(out, start_layer=i, stop_layer=i)
             elapsed_time = time.time() - start_time_edge
-            size = (out.element_size() * out.nelement())/1024/1024  #in MB
+            size = (out.element_size() * out.nelement())/1024/1024  # in MB
             print(f'{data[str(i+1)]} : {size} MB, time = {elapsed_time} ')
             layer_metadata[i+1] = {"layer_name": data[str(i+1)],
                                    "size": size,
@@ -102,7 +102,7 @@ def detect_images(img):
 
     with torch.no_grad():
         if not skip_server_time_generation:
-            out = generate_edge_parameters(batch_t)            
+            out = generate_edge_parameters(batch_t)
         else:
             out = generate_server_time(batch_t)
     return out
