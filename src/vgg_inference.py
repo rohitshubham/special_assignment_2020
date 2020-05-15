@@ -68,8 +68,11 @@ def detect_images(img):
 
     def generate_edge_parameters(out):
         # input image size
-        print(f'{data[str(0)]} : {(out.element_size() * out.nelement())/1024/1024} MB')
-        layer_metadata[0] = {"layer_name": data[str(0)], "size": (out.element_size() * out.nelement())/1024/1024}
+        size = (out.element_size() * out.nelement())/1024/1024
+        print(f'{data[str(0)]} : {size} MB')
+        layer_metadata[0] = {"layer_name": data[str(0)],
+                             "size": size,
+                             "transmission_time": size/bandwidth}
 
         for i in range(0, 23):
             start_time_edge = time.time()
