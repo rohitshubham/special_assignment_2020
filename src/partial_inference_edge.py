@@ -51,7 +51,6 @@ def get_partition_layer():
     layer_info = get_layer_data()
     print("Attempting to perform the graph cut")
     result = partition_light()
-    print(result)
     print(f"The partition layer is {layer_info[f'{result[6]}']}({result[6]})")
     return result[6]
 
