@@ -1,6 +1,6 @@
 import grpc
-import inference_pb2
-import inference_pb2_grpc
+import gRPC_module.inference_pb2 as inference_pb2
+import gRPC_module.inference_pb2_grpc as inference_pb2_grpc
 from concurrent import futures
 import partial_inference_server
 import time

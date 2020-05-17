@@ -1,7 +1,7 @@
 import grpc
 import json
-import inference_pb2
-import inference_pb2_grpc
+import gRPC_module.inference_pb2 as inference_pb2
+import gRPC_module.inference_pb2_grpc as inference_pb2_grpc
 
 server_name = "cloud"
 server_port = "50051"

@@ -1,10 +1,18 @@
 import torch
-import collections
-from vgg import VGGNet
 import json
+import collections
+from dnn_architectures.vgg import VGGNet
 from torchvision import transforms
 from grpc_client import send_grpc_msg
 from PIL import Image
+from graph_cut.graph_cut import partition_light
+
+
+def get_layer_data():
+    with open('metadata/vgg_layer_info.json') as f:
+        data = json.load(f)
+    return data
+
 
 dev = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -39,8 +47,17 @@ test_model.load_state_dict(modified_weights)
 test_model.eval()
 
 
+def get_partition_layer():
+    layer_info = get_layer_data()
+    print("Attempting to perform the graph cut")
+    result = partition_light()
+    print(result)
+    print(f"The partition layer is {layer_info[f'{result[6]}']}({result[6]})")
+    return result[6]
+
+
 def partial_inference(img):
-    
+    partition_layer = get_partition_layer()
     transform = transforms.Compose([transforms.Resize(256),	
                                     transforms.CenterCrop(224),
                                     transforms.ToTensor(),
@@ -52,10 +69,10 @@ def partial_inference(img):
     batch_t = torch.unsqueeze(img_t, 0).to(device)
     with torch.no_grad():
         print(f"Starting VGG-16 inference")
-        out = test_model(batch_t, start_layer=0, stop_layer=13)
-        print(f"Executed the code till layer {13}. Sending to cloud now.")
+        out = test_model(batch_t, start_layer=0, stop_layer=partition_layer-1)
+        print(f"Executed the code till layer {partition_layer-1}. Sending to cloud now.")
         intermediate_tensor_list = out.tolist()
-        out = send_grpc_msg(intermediate_tensor_list, 14)
+        out = send_grpc_msg(intermediate_tensor_list, partition_layer)
     return out
 
 

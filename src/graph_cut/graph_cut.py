@@ -1,5 +1,4 @@
 import networkx as nx
-import matplotlib.pyplot as plt
 import json
 from networkx.algorithms.flow import boykov_kolmogorov
 
@@ -51,7 +50,7 @@ def build_vgg_graph():
     return vgg
 
 
-def get_partition_node(edge_nodes):
+def get_partition_node(graph, edge_nodes):
     layer_data = get_layer_data()
     time_data_edge, time_data_server = get_model_layers()
     time_transmission = 0
@@ -72,21 +71,23 @@ def get_partition_node(edge_nodes):
         elif layer_data[f"{i}"] in edge_nodes[1]:
             time_execution_cloud = time_execution_cloud + time_data_server[f'{i}']["server_time"]
 
-    return edge_nodes[0], edge_nodes[1], time_execution_edge, time_transmission, time_execution_cloud, cut_layer
+    return graph, edge_nodes[0], edge_nodes[1], time_execution_edge, time_transmission, time_execution_cloud, cut_layer
 
 
-vgg = build_vgg_graph()
+def partition_light():
+    vgg = build_vgg_graph()
 
-#  Perform a boykov graph-cut between edge and cloud VGG-16 layers
-R = boykov_kolmogorov(vgg, 'edge', 'cloud')
-flow_value = nx.maximum_flow_value(vgg, 'edge', 'cloud')
-print(flow_value)
-source_tree, target_tree = R.graph['trees']
-execution_nodes = (set(vgg) - set(target_tree), set(target_tree))
-print(f'Nodes to be executed on edge : {execution_nodes[0]}')
-print(f'Nodes to be executed on cloud : {execution_nodes[1]}')
-print(get_partition_node(execution_nodes))
+    #  Perform a boykov graph-cut between edge and cloud VGG-16 layers
+    R = boykov_kolmogorov(vgg, 'edge', 'cloud')
+    source_tree, target_tree = R.graph['trees']
+    execution_nodes = (set(vgg) - set(target_tree), set(target_tree))
+    print(f'Nodes to be executed on edge : {execution_nodes[0]}')
+    print(f'Nodes to be executed on cloud : {execution_nodes[1]}')
+    return get_partition_node(vgg, execution_nodes)
 
-nx.draw(vgg, with_labels=True, font_weight='bold')
-plt.draw()
-plt.show()
+# Code for debug purposes
+# import matplotlib.pyplot as plt
+# x = partition_light()
+# nx.draw(x[0], with_labels=True, font_weight='bold')
+# plt.draw()
+# plt.show()

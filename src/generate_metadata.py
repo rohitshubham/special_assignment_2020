@@ -2,7 +2,7 @@ from torchvision import transforms
 import torch
 from PIL import Image
 import collections
-from vgg import VGGNet
+from dnn_architectures.vgg import VGGNet
 import json
 import time
 

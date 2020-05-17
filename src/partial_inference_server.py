@@ -1,6 +1,6 @@
 import torch
 import collections
-from vgg import VGGNet
+from dnn_architectures.vgg import VGGNet
 import time
 
 
