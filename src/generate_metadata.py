@@ -1,17 +1,32 @@
-from torchvision import transforms
+import json
+import time
 import torch
+import yaml
+from torchvision import transforms
 from PIL import Image
 import collections
 from dnn_architectures.vgg import VGGNet
-import json
-import time
+
+
+def load_configuration():
+    configuration = {}
+    with open("configuration.yaml", 'r') as stream:
+        try:
+            configuration = yaml.safe_load(stream)
+        except yaml.YAMLError as exc:
+            print(exc)
+    return configuration['model']
+
+
+model_configuration = load_configuration()
 
 dev = 'cuda' if torch.cuda.is_available() else 'cpu'
+device = torch.device('cpu')
 
-device = torch.device(dev)
 
-model_path = r"/home/rohit/vgg16-397923af.pth"
-test_model = VGGNet(1000)
+model_path = model_configuration['path']
+
+test_model = VGGNet(model_configuration['classes'])
 test_model.to(device)
 
 loaded_model_weights = torch.load(model_path)

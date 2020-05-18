@@ -1,0 +1,8 @@
+tensorrt==6.0.1.10
+torch==1.4.0
+PyYAML==3.12
+networkx==2.4
+torchvision==0.5.0a0+85b8fbf
+grpcio==1.28.1
+grpcio-tools==1.28.1
+matplotlib==3.2.1

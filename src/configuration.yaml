@@ -1,0 +1,4 @@
+model:
+    architecture: VGG16
+    path: "/home/rohit/vgg16-397923af.pth"
+    classes: 1000

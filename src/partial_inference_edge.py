@@ -1,6 +1,7 @@
 import torch
 import json
 import collections
+import yaml
 from dnn_architectures.vgg import VGGNet
 from torchvision import transforms
 from grpc_client import send_grpc_msg
@@ -14,13 +15,25 @@ def get_layer_data():
     return data
 
 
-dev = 'cuda' if torch.cuda.is_available() else 'cpu'
+def load_configuration():
+    configuration = {}
+    with open("configuration.yaml", 'r') as stream:
+        try:
+            configuration = yaml.safe_load(stream)
+        except yaml.YAMLError as exc:
+            print(exc)
+    return configuration['model']
 
+
+model_configuration = load_configuration()
+
+dev = 'cuda' if torch.cuda.is_available() else 'cpu'
 device = torch.device('cpu')
 
-model_path = r"/home/rohit/vgg16-397923af.pth"
 
-test_model = VGGNet(1000)
+model_path = model_configuration['path']
+
+test_model = VGGNet(model_configuration['classes'])
 test_model.to(device)
 
 loaded_model_weights = torch.load(model_path)
