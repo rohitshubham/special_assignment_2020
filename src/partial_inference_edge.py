@@ -25,6 +25,7 @@ def load_configuration():
     return configuration['model']
 
 
+print(f"Reading configuration to load model")
 model_configuration = load_configuration()
 
 dev = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -32,6 +33,7 @@ device = torch.device('cpu')
 
 
 model_path = model_configuration['path']
+print(f"{model_configuration['architecture']} pre-trained model loaded")
 
 test_model = VGGNet(model_configuration['classes'])
 test_model.to(device)

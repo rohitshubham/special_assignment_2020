@@ -83,14 +83,14 @@ def partition_light():
     source_tree, target_tree = R.graph['trees']
     execution_nodes = (set(vgg) - set(target_tree), set(target_tree))
     end = time.time()
-    print(end - start)
+    # print(end - start)
     print(f'Nodes to be executed on edge : {execution_nodes[0]}')
     print(f'Nodes to be executed on cloud : {execution_nodes[1]}')
     return get_partition_node(vgg, execution_nodes)
 
 # Code for debug purposes
-import matplotlib.pyplot as plt
-x = partition_light()
-nx.draw(x[0], with_labels=True, font_weight='bold')
-plt.draw()
-plt.show()
+# import matplotlib.pyplot as plt
+# x = partition_light()
+# nx.draw(x[0], with_labels=True, font_weight='bold')
+# plt.draw()
+# plt.show()
