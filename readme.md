@@ -6,6 +6,8 @@ This is the implementation of DNN Surgery Light (DSL) algorithm originally publi
 
 It has been implemented in python3 using [pytorch](pytorch.org) DNN library. This implementation uses VGG-16 as the underlying architecture and the function calls have been made using gRPC protocol (as per the original paper). It automatically uses CUDA cores if available on the device.
 
+The implementation essentially converts the original graph to a minimum _s-t_ cut problem. This implementation performs the cut using [Boykov Kolmogorov](discovery.ucl.ac.uk/13383/1/13383.pdf) algorithm. The bandwidth has been measure using [iperf3](https://iperf.fr/) tool.
+
 #### Architecture
 A rough architecture and the overall data-flow has been summarized in the figure below.
 
