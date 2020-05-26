@@ -30,6 +30,19 @@ Additionally, for running the server code, we require:
 3. For edge device, run `partial_inference_edge.py`
 4. For cloud device, run `grpc_server.py` in background
 
+![running](images/5.png)
+* Figure 2: Running the code
+
+#### Results 
+
+![minimum](images/4.png)
+* Figure 3: Representation of VGG-16 graph to the minimum _s-t_ cut problem
+
+![size](images/2.png)
+* Figure 4 : Size of each layer
+
+![time](images/3.PNG)
+* Figure 5 : Latency of each layer
 ---
 ### References
 
