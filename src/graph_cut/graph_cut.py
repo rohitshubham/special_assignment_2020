@@ -4,12 +4,16 @@ from networkx.algorithms.flow import boykov_kolmogorov
 import time
 
 def get_layer_data():
+    """Returns the layer information for VGG-16"""
     with open('metadata/vgg_layer_info.json') as f:
         data = json.load(f)
     return data
 
 
 def get_model_layers():
+    """
+    Reads the layer metadata and server metadata file for graph cut algorithm
+    """
     with open('metadata/layer_metadata.json') as f:
         data = json.load(f)
     with open('metadata/server_time.json') as f:
@@ -18,6 +22,9 @@ def get_model_layers():
 
 
 def build_vgg_graph():
+    """
+    Builds the minimum s-t cut graph for performing min-cut
+    """
     data, server_time_data = get_model_layers()
     vgg = nx.DiGraph()
 
@@ -51,6 +58,14 @@ def build_vgg_graph():
 
 
 def get_partition_node(graph, edge_nodes):
+    """
+    Returns the details of total timing data for edge, server and transmission.
+    Also returns the cut layer after the algorithm
+
+    Parameters:
+    graph (networkx graph):  the minimum s-t graph
+    edge_nodes (tuple) : tuple of edge and cloud nodes
+    """
     layer_data = get_layer_data()
     time_data_edge, time_data_server = get_model_layers()
     time_transmission = 0
@@ -75,6 +90,10 @@ def get_partition_node(graph, edge_nodes):
 
 
 def partition_light():
+    """
+    Performs the dynamic surgery light algorithm using boykov_kolmogorov min s-t cut
+    """
+
     start = time.time()
     vgg = build_vgg_graph()
 

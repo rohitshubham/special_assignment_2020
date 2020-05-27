@@ -10,12 +10,16 @@ from graph_cut.graph_cut import partition_light
 
 
 def get_layer_data():
+    """Returns the layer information for VGG-16"""
     with open('metadata/vgg_layer_info.json') as f:
         data = json.load(f)
     return data
 
 
 def load_configuration():
+    """
+    Reads the configuration.yaml file for model configuration
+    """
     configuration = {}
     with open("configuration.yaml", 'r') as stream:
         try:
@@ -51,6 +55,9 @@ for layer_name, weights in loaded_model_weights.items():
 def load_classes(path):
     """
     Loads class labels at 'path'
+
+    Parameters:
+    path (string): String to the model path for VGG-16
     """
     fp = open(path, "r")
     names = fp.read().split("\n")[:-1]
@@ -63,6 +70,10 @@ test_model.eval()
 
 
 def get_partition_layer():
+    """
+    Returns the partition layer information after 
+    performing the Dynamic Surgery Light (DSL) algorithm 
+    """
     layer_info = get_layer_data()
     print("Attempting to perform the graph cut")
     result = partition_light()
@@ -71,6 +82,10 @@ def get_partition_layer():
 
 
 def partial_inference(img):
+    """
+    Perform the partial inference at edge and calls server using gRPC to complete the inference.
+    Prints the inference output.
+    """
     partition_layer = get_partition_layer()
     transform = transforms.Compose([transforms.Resize(256),	
                                     transforms.CenterCrop(224),

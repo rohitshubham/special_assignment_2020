@@ -8,7 +8,14 @@ import json
 
 
 class ServerServicer(inference_pb2_grpc.ServerServicer):
+    """
+    This class provides the server stub interface for partial inference
+    """
     def Partial(self, request, context):
+        """
+        Parameters:
+        request (Tensor) : Tensor object request data coming from edge
+        """
         print("Received processing request")
         response = inference_pb2.Result()
         data = json.loads(request.tensor)

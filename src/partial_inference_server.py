@@ -6,6 +6,9 @@ import time
 
 
 def load_configuration():
+    """
+    Reads the configuration.yaml file for model configuration
+    """
     configuration = {}
     with open("configuration.yaml", 'r') as stream:
         try:
@@ -51,6 +54,13 @@ test_model.eval()
 
 
 def partial_inference(intermediate_data, start_layer):
+    """
+    Perform the partial inference at edge and calls server using gRPC to complete the inference.
+    
+    Paramters:
+    intermediate_data (list): the intermediate inference data recieved from edge device
+    start_layer (int) : the layer form which to begin inference. 
+    """
     out = torch.Tensor(intermediate_data).to(device)
     with torch.no_grad():
         start_time = time.time()
