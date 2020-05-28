@@ -6,12 +6,30 @@ import partial_inference_server
 import time
 import json
 import os
-
+import yaml
 
 if os.environ.get('https_proxy'):
     del os.environ['https_proxy']
 if os.environ.get('http_proxy'):
     del os.environ['http_proxy']
+
+
+def load_configuration():
+    """
+    Reads the configuration.yaml file for model configuration
+    """
+    configuration = {}
+    with open("configuration.yaml", 'r') as stream:
+        try:
+            configuration = yaml.safe_load(stream)
+        except yaml.YAMLError as exc:
+            print(exc)
+    return configuration['server']
+
+
+model_configuration = load_configuration()
+server_name = model_configuration["address"]
+server_port = model_configuration["port"]
 
 
 class ServerServicer(inference_pb2_grpc.ServerServicer):
@@ -39,7 +57,7 @@ inference_pb2_grpc.add_ServerServicer_to_server(
 )
 
 print('Starting server. Listening on port 50051.')
-server.add_insecure_port('[::]:50051')
+server.add_insecure_port(f'[::]:{server_port}')
 server.start()
 
 # since server.start() will not block,
