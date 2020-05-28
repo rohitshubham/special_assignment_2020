@@ -2,7 +2,14 @@ import grpc
 import json
 import gRPC_module.inference_pb2 as inference_pb2
 import gRPC_module.inference_pb2_grpc as inference_pb2_grpc
+import os
 
+
+if os.environ.get('https_proxy'):
+    del os.environ['https_proxy']
+if os.environ.get('http_proxy'):
+    del os.environ['http_proxy']
+    
 server_name = "cloud"
 server_port = "50051"
 # open a gRPC channel

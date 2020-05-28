@@ -21,7 +21,7 @@ def load_configuration():
 model_configuration = load_configuration()
 
 dev = 'cuda' if torch.cuda.is_available() else 'cpu'
-device = torch.device('cpu')
+device = torch.device(dev)
 
 
 model_path = model_configuration['path']

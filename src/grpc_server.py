@@ -5,6 +5,13 @@ from concurrent import futures
 import partial_inference_server
 import time
 import json
+import os
+
+
+if os.environ.get('https_proxy'):
+    del os.environ['https_proxy']
+if os.environ.get('http_proxy'):
+    del os.environ['http_proxy']
 
 
 class ServerServicer(inference_pb2_grpc.ServerServicer):
