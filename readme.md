@@ -29,11 +29,26 @@ Additionally, for running the server code, we require:
 #### How to run
 1. Install the  required dependencies on the respective system
 2. Generate the required metadata using `generate_metadata.py` 
-3. For edge device, run `partial_inference_edge.py`
-4. For cloud device, run `grpc_server.py` in background
+3. Update the `configuration.yaml` file 
+4. For edge device, run `partial_inference_edge.py`
+5. For cloud device, run `grpc_server.py` in background
 
 ![running](images/5.png)
 * Figure 2: Running the code
+
+#### Sample configuration file
+The `configuration.yaml` file reads the necessary configuration about the server address and required model config. A sample `configuration.yaml` file should look like :
+
+```YAML
+model:
+    architecture: VGG16
+    path: "/home/rohit/vgg16-397923af.pth"
+    classes: 1000
+server:
+    address: "cloud"
+    port: "50051"
+
+```
 
 #### Results 
 
