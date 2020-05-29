@@ -104,7 +104,7 @@ def partition_light():
     end = time.time()
     # print(end - start)
     print(f'Nodes to be executed on edge : {execution_nodes[0]}')
-    print(f'Nodes to be executed on cloud : {execution_nodes[1]}')
+    # print(f'Nodes to be executed on cloud : {execution_nodes[1]}')
     return get_partition_node(vgg, execution_nodes)
 
 # Code for debug purposes
