@@ -108,8 +108,10 @@ def detect_images(img):
         print(f'{data[str(0)]} : time = {0}')
 
         for i in range(0, 23):
+            torch.cuda.synchronize()
             start_time_edge = time.time()
             out = test_model(out, start_layer=i, stop_layer=i)
+            torch.cuda.synchronize()
             elapsed_time = time.time() - start_time_edge
             print(f'{data[str(i+1)]} : time = {elapsed_time}')
             layer_metadata[i+1] = {"layer_name": data[str(i+1)],
